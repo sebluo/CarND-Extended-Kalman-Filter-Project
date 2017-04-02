@@ -92,6 +92,7 @@ int main(int argc, char* argv[]) {
       iss >> timestamp;
       meas_package.timestamp_ = timestamp;
       measurement_pack_list.push_back(meas_package);
+	  //gt_package.sensor_type_ = GroundTruthPackage::LASER;
     } else if (sensor_type.compare("R") == 0) {
       // RADAR MEASUREMENT
 
@@ -108,6 +109,7 @@ int main(int argc, char* argv[]) {
       iss >> timestamp;
       meas_package.timestamp_ = timestamp;
       measurement_pack_list.push_back(meas_package);
+	  //gt_package.sensor_type_ = GroundTruthPackage::LASER;
     }
 
     // read ground truth data to compare later
@@ -121,6 +123,7 @@ int main(int argc, char* argv[]) {
     iss >> vy_gt;
     gt_package.gt_values_ = VectorXd(4);
     gt_package.gt_values_ << x_gt, y_gt, vx_gt, vy_gt;
+	//gt_package.timestamp_ = timestamp;
     gt_pack_list.push_back(gt_package);
   }
 
