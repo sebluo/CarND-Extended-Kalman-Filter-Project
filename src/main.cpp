@@ -13,6 +13,8 @@ using Eigen::MatrixXd;
 using Eigen::VectorXd;
 using std::vector;
 
+#define DEBUG 0
+
 void check_arguments(int argc, char* argv[]) {
   string usage_instructions = "Usage instructions: ";
   usage_instructions += argv[0];
@@ -51,12 +53,24 @@ void check_files(ifstream& in_file, string& in_name,
 
 int main(int argc, char* argv[]) {
 
+  string in_file_name_ ;
+  string out_file_name_;
+
+  if(!DEBUG){
+
   check_arguments(argc, argv);
 
-  string in_file_name_ = argv[1];
+  in_file_name_ = argv[1];
+  out_file_name_ = argv[2];
+  }
+  if(DEBUG){
+  in_file_name_ = "./sample-laser-radar-measurement-data-2.txt";
+  out_file_name_ = "./obj_pose-laser-radar-ekf-output-2.txt";
+  }
+
   ifstream in_file_(in_file_name_.c_str(), ifstream::in);
 
-  string out_file_name_ = argv[2];
+
   ofstream out_file_(out_file_name_.c_str(), ofstream::out);
 
   check_files(in_file_, in_file_name_, out_file_, out_file_name_);
@@ -84,8 +98,8 @@ int main(int argc, char* argv[]) {
       // read measurements at this timestamp
       meas_package.sensor_type_ = MeasurementPackage::LASER;
       meas_package.raw_measurements_ = VectorXd(2);
-      float x;
-      float y;
+      double x;
+      double y;
       iss >> x;
       iss >> y;
       meas_package.raw_measurements_ << x, y;
@@ -99,9 +113,9 @@ int main(int argc, char* argv[]) {
       // read measurements at this timestamp
       meas_package.sensor_type_ = MeasurementPackage::RADAR;
       meas_package.raw_measurements_ = VectorXd(3);
-      float ro;
-      float phi;
-      float ro_dot;
+      double ro;
+      double phi;
+      double ro_dot;
       iss >> ro;
       iss >> phi;
       iss >> ro_dot;
@@ -113,10 +127,10 @@ int main(int argc, char* argv[]) {
     }
 
     // read ground truth data to compare later
-    float x_gt;
-    float y_gt;
-    float vx_gt;
-    float vy_gt;
+    double x_gt;
+    double y_gt;
+    double vx_gt;
+    double vy_gt;
     iss >> x_gt;
     iss >> y_gt;
     iss >> vx_gt;
@@ -154,8 +168,8 @@ int main(int argc, char* argv[]) {
       out_file_ << measurement_pack_list[k].raw_measurements_(1) << "\t";
     } else if (measurement_pack_list[k].sensor_type_ == MeasurementPackage::RADAR) {
       // output the estimation in the cartesian coordinates
-      float ro = measurement_pack_list[k].raw_measurements_(0);
-      float phi = measurement_pack_list[k].raw_measurements_(1);
+      double ro = measurement_pack_list[k].raw_measurements_(0);
+      double phi = measurement_pack_list[k].raw_measurements_(1);
       out_file_ << ro * cos(phi) << "\t"; // p1_meas
       out_file_ << ro * sin(phi) << "\t"; // ps_meas
     }

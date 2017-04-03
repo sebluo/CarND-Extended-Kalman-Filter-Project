@@ -52,15 +52,14 @@ void KalmanFilter::Update(const VectorXd &z) {
 	
 }
 
-void KalmanFilter::UpdateEKF(const VectorXd &z) {
+void KalmanFilter::UpdateEKF(const VectorXd &z,const MatrixXd &Hj) {
   /**
   TODO:
     * update the state by using Extended Kalman Filter equations
   */
   
-    MatrixXd Hj=Tools::CalculateJacobian(const VectorXd& x_);
-	
-	y = VectorXd(3);
+    	
+	VectorXd y = VectorXd(3);
 	y(0)=sqrt(x_(0)*x_(0)+x_(1)*x_(1));
 	y(1)=atan2(x_(1),x_(0));
 	y(2)=(x_(0)*x_(2)+x_(1)*x_(3))/y(0);
